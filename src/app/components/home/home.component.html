@@ -1,0 +1,82 @@
+<p-sidebar [(visible)]="sidebarVisible">
+  <ng-template pTemplate="header">Employee Details</ng-template>
+  <div *ngFor="let user of users">
+    <p>{{ user.fullName }}</p>
+  </div>
+  <ng-template pTemplate="content">
+    <p-megaMenu ></p-megaMenu>
+
+
+  </ng-template>
+  <ng-template pTemplate="footer">Footer Content</ng-template>
+</p-sidebar>
+
+<p-table [value]="employees" [scrollable]="true" scrollHeight="70vh" [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="true" [rows]="request.rows" [first]="request.first" [lazy]="true" (onLazyLoad)="loadEmployees($event)"
+  [totalRecords]="75000" [customSort]="true" (sortFunction)="loadEmployees($event)">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      <p-button (click)="sidebarVisible = true" icon="pi pi-align-justify
+        "></p-button>
+      <h2>Employees Details</h2>
+      <div>
+        <input pInputText type="text" (input)="filterEmployee()" placeholder="Search First Name"
+          [(ngModel)]="globalFilter" />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Employee ID</th>
+      <th pSortableColumn="FirstName">First Name <p-sortIcon [field]="'FirstName'"></p-sortIcon></th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Depart</th>
+      <th>Gender</th>
+      <th>Job Profile</th>
+      <th>EMP Rating</th>
+      <th>EMP Type</th>
+      <th>Status</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-employee>
+    <tr>
+      <td>{{ employee.EmpID }}</td>
+      <td>{{ employee.FirstName }}</td>
+      <td>{{ employee.LastName }}</td>
+      <td>{{ employee.ADEmail }}</td>
+      <td>{{ employee.DepartmentType }}</td>
+      <td>{{ employee.GenderCode }}</td>
+      <td>{{ employee.Title }}</td>
+      <td>{{ employee.Current_Employee_Rating }}</td>
+      <td>{{ employee.EmployeeClassificationType }}</td>
+      <td>
+        <button type="button" pButton pRipple (click)="showConfirm()">
+          {{ employee.EmployeeStatus }}
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-toast [position]="sidebarVisible ? 'bottom-center' : 'bottom-left'" key="confirm" (onClose)="onReject()"
+  [baseZIndex]="5000" [style]="{ 'margin-left': sidebarVisible ? '30vw' : '0' }">
+  <ng-template let-message pTemplate="message">
+    <div class="flex flex-column" style="flex: 1">
+      <div class="text-center">
+        <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+        <h4>{{ message.summary }}</h4>
+        <p>{{ message.detail }}</p>
+      </div>
+      <div class="grid p-fluid">
+        <div class="col-6">
+          <button type="button" pButton (click)="onConfirm()" label="Yes" class="p-button-success"></button>
+        </div>
+        <div class="col-6">
+          <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
